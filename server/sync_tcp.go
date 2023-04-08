@@ -1,14 +1,32 @@
 
+package server
+
+import (
+    "bufio"
+    "bytes"
+    "encoding/binary"
+	"errors"
+	"io"
+	"log"
+	"net"
+	"strconv"
+	"github.com/Avyukth/dicedb/config"
+)
 func readCommand(c net.Conn) (string, error) {
-	var buf []byte
-	
+	var buf []byte= make([]byte, 1024)
+	n,err := c.Read(buf[:])
+	if err != nil {
+		return "", err
+	}
+	return string(buf[:n]), nil
+
 }
 
 func RunSyncTCPServer() {
 	log.Println("Starting a asynchronous TCP server on ", config.Host, ":", config.Port)
 	var con_clients int=0
 
-	lsnr,err:=net.listen("tcp",config.Host+":"+strconv.Itoa(config.Port))
+	lsnr,err:=net.Listen("tcp",config.Host+":"+strconv.Itoa(config.Port))
 
 	if err!=nil{
 		panic(err)
@@ -37,7 +55,6 @@ func RunSyncTCPServer() {
 			if err = respond(c, cmd); err != nil {
 				log.Println("Error responding to command: ", err)
 			}
-
 		}
 	}
 }
