@@ -9,7 +9,7 @@ import (
 
 func setupFlags(){
 	flag.StringVar(&config.Host, "host", "0.0.0.0", "Host for the dice server")
-	flag.StringVar(&config.Port, "port", 7379, "port for the dice server")
+	flag.IntVar(&config.Port, "port", 7379, "port for the dice server")
 	flag.Parse()
 }
 
